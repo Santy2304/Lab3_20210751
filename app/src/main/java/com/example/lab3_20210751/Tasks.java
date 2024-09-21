@@ -55,6 +55,8 @@ public class Tasks extends AppCompatActivity {
             startActivity(intent);
             finish();
             return true;
+        } else if (item.getItemId()==android.R.id.home) {
+            
         }
 
         return super.onOptionsItemSelected(item);
