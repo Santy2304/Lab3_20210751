@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,13 +25,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import androidx.work.Worker;
 
 import com.example.lab3_20210751.Beans.ToDo;
 import com.example.lab3_20210751.Beans.TodosResponse;
 import com.example.lab3_20210751.Beans.User;
 import com.example.lab3_20210751.Service.AuthenticationService;
+import com.example.lab3_20210751.Workers.TimerWorker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,10 +109,17 @@ public class Timer extends AppCompatActivity {
             @Override
             public void onFinish() {
                 temporizador.setText("00:00");
+                TextView textoAux = findViewById(R.id.timerText);
+                textoAux.setVisibility(View.INVISIBLE);
+                actionButton.setVisibility(View.INVISIBLE);
+                actionButton.setEnabled(false);
                 estaCorriendo = false;
                 actionButton.setImageResource(R.drawable.play_arrow_24px);
 
                 tieneTareas(user);
+
+                WorkRequest workRequest = new OneTimeWorkRequest.Builder(TimerWorker.class).build();
+                WorkManager.getInstance(Timer.this).enqueue(workRequest);
                 //mostrarDiolog();
 
             }
@@ -164,8 +178,12 @@ public class Timer extends AppCompatActivity {
                             mostrarDiolog();
                         }else{
                             Intent intent = new Intent(Timer.this, Tasks.class);
-                            intent.putExtra("user",user);
-                            startActivity(intent);
+                            intent.putExtra("user", user);
+                            intent.putExtra("todosList", (Serializable) listTodos);
+                            launcher.launch(intent);
+                            //Intent intent = new Intent(Timer.this, Tasks.class);
+                            //intent.putExtra("user",user);
+                            //startActivity(intent);
                         }
                     }else{
                         mostrarDiolog();
@@ -200,6 +218,16 @@ public class Timer extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    Intent resultData = o.getData();
+                    User user = (User) resultData.getSerializableExtra("user");
+                }
+
+            }
+    );
 
 
     //Código tomado de material de clase para probar conexión a internet

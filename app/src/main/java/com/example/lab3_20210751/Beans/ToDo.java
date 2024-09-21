@@ -2,7 +2,7 @@ package com.example.lab3_20210751.Beans;
 
 import java.io.Serializable;
 
-public class ToDo{
+public class ToDo implements Serializable{
 
     private String todo;
     private int id;

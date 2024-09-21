@@ -13,7 +13,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.lab3_20210751.Beans.ToDo;
 import com.example.lab3_20210751.Beans.User;
+
+import java.util.List;
 
 public class Tasks extends AppCompatActivity {
 
@@ -23,7 +26,9 @@ public class Tasks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tasks);
+
         User user = (User) getIntent().getSerializableExtra("user");
+        List<ToDo> todosList = (List<ToDo>) getIntent().getSerializableExtra("todosList");
 
 
         TextView textito = findViewById(R.id.textUserTask);
@@ -56,7 +61,11 @@ public class Tasks extends AppCompatActivity {
             finish();
             return true;
         } else if (item.getItemId()==android.R.id.home) {
-            
+            User user = (User) getIntent().getSerializableExtra("user");
+            Intent intent = new Intent();
+            intent.putExtra("user",user);
+            setResult(RESULT_OK,intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
