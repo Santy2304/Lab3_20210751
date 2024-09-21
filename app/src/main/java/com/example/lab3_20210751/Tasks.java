@@ -1,5 +1,6 @@
 package com.example.lab3_20210751;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,9 @@ public class Tasks extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId()==R.id.logout){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
 

@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             User user = response.body();
                             Intent intent = new Intent(MainActivity.this, Timer.class);
+                            intent.putExtra("user",user);
                             startActivity(intent);
-                            finish();
                         } else {
                             Toast.makeText(MainActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                         }
@@ -75,13 +75,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Código tomado de material de clase para probar conexión a internet
     public boolean internetConnection(){
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetworkInfo = manager.getActiveNetworkInfo();
         boolean tieneInternet = activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
-        Log.d("msg-test","Internet: " + tieneInternet);
         return tieneInternet;
     }
 

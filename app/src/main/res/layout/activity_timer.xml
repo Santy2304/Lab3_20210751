@@ -85,16 +85,14 @@
             android:text="25:00"
             />
 
-        <Button
-            style="?attr/materialIconButtonFilledTonalStyle"
+        <ImageButton
             android:id="@+id/actionButton"
             android:layout_gravity="center_horizontal"
             android:layout_margin="8dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="actionButton"
-            app:icon="@drawable/play_arrow_24px"
-            />
+            android:src="@drawable/play_arrow_24px" />
 
 
     </LinearLayout>
