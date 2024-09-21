@@ -94,7 +94,6 @@
             android:layout_height="wrap_content"
             android:contentDescription="actionButton"
             app:icon="@drawable/play_arrow_24px"
-            android:iconGravity="center"
             />
 
 
