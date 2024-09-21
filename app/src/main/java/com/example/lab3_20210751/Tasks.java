@@ -16,10 +16,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.lab3_20210751.Beans.ToDo;
 import com.example.lab3_20210751.Beans.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Tasks extends AppCompatActivity {
 
+    ArrayList<String> listaTareas1 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +33,22 @@ public class Tasks extends AppCompatActivity {
         List<ToDo> todosList = (List<ToDo>) getIntent().getSerializableExtra("todosList");
 
 
+        for(ToDo toDo: todosList){
+            String textoSpinner;
+
+            if(toDo.isCompleted()){
+                textoSpinner = toDo.getTodo() + "- Completado";
+            }else{
+                textoSpinner = toDo.getTodo() + "- No Completado";
+            }
+            listaTareas1.add(textoSpinner);
+        }
+
+        String[] listaTareas = listaTareas1.toArray(new String[0]);
+
+
         TextView textito = findViewById(R.id.textUserTask);
         textito.setText("Ver tareas de " + user.getFirstName());
-
-
-
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
