@@ -15,6 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -195,6 +199,8 @@ public class Timer extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     //Código tomado de material de clase para probar conexión a internet
     public boolean internetConnection(){

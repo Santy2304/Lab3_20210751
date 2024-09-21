@@ -11,6 +11,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -23,4 +24,8 @@ public interface AuthenticationService {
 
     @GET("/todos/user/{userId}")
     Call<TodosResponse> getTodos(@Path("userId") int userId);
+
+
+    @PUT("/todos/{todoId}")
+    Call<ToDo> getTask(@Path("todo") int todoId);
 }
