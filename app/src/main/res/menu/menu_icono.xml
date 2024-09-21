@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/estadisticas"
+        android:id="@+id/logout"
         android:icon="@drawable/power_settings_new_24px"
         android:title="Item"
         app:showAsAction="ifRoom" />
