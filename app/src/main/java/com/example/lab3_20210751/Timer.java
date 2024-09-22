@@ -25,7 +25,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import androidx.work.Worker;
@@ -49,6 +51,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Timer extends AppCompatActivity {
 
+
+    User user;
     TextView temporizador;
     //Clase tomada de video y chatGPT para implementar temporizador
     CountDownTimer timer;
@@ -60,7 +64,7 @@ public class Timer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_timer);
-        User user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("user");
 
         TextView fullname = findViewById(R.id.name);
         fullname.setText(user.getFirstName() +" " + user.getLastName());
@@ -108,7 +112,7 @@ public class Timer extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                temporizador.setText("00:00");
+                temporizador.setText("05:00");
                 TextView textoAux = findViewById(R.id.timerText);
                 textoAux.setVisibility(View.INVISIBLE);
                 actionButton.setVisibility(View.INVISIBLE);
@@ -118,14 +122,48 @@ public class Timer extends AppCompatActivity {
 
                 tieneTareas(user);
 
-                WorkRequest workRequest = new OneTimeWorkRequest.Builder(TimerWorker.class).build();
-                WorkManager.getInstance(Timer.this).enqueue(workRequest);
+              WorkRequest workRequest = new OneTimeWorkRequest.Builder(TimerWorker.class).build();
+              WorkManager.getInstance(Timer.this).enqueue(workRequest);
+
+              WorkManager.getInstance(Timer.this).getWorkInfoByIdLiveData(workRequest.getId()).observe(Timer.this,workInfo -> {
+
+
+
+
+                  if(workInfo!=null){
+
+
+                      if (workInfo.getState()== WorkInfo.State.RUNNING){
+                          Data progress = workInfo.getProgress();
+                          mostrarTiempo2(progress.getLong("tiempoRestante",0));
+                      }else if(workInfo.getState()==WorkInfo.State.SUCCEEDED){
+                          temporizador.setText("00:00");
+                          mostrarDiolog2();
+                          actionButton.setVisibility(View.VISIBLE);
+                          actionButton.setEnabled(true);
+                          actionButton.setImageResource(R.drawable.replay_24px);
+
+                      }
+                  }
+              });
+
                 //mostrarDiolog();
 
             }
         }.start();
         estaCorriendo=true;
         actionButton.setImageResource(R.drawable.replay_24px);
+    }
+
+
+    public void mostrarTiempo2(long tiempito){
+        int minutos = (int) (tiempito / 1000) / 60;
+        int segundos = (int) (tiempito / 1000) % 60;
+
+        //Código tomado de chatGPT para formatear el texto
+        String tiempoTexto = String.format("%02d:%02d", minutos, segundos);
+
+        temporizador.setText(tiempoTexto);
     }
 
 
@@ -151,6 +189,15 @@ public class Timer extends AppCompatActivity {
                 .setMessage("Empezo el tiempo de descanso!")
                 .setPositiveButton("Entendido", (dialog, which) -> {
 
+                })
+                .show();
+    }
+
+    public void mostrarDiolog2(){
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("¡Atención!")
+                .setMessage("Terminó el tiempo de descanso. Dale al botón de reinicio para empezar otro ciclo. ")
+                .setPositiveButton("Entendido", (dialog, which) -> {
                 })
                 .show();
     }
@@ -223,7 +270,7 @@ public class Timer extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult o) {
                     Intent resultData = o.getData();
-                    User user = (User) resultData.getSerializableExtra("user");
+                    user = (User) resultData.getSerializableExtra("user");
                 }
 
             }
