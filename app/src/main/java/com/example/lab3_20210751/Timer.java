@@ -122,16 +122,12 @@ public class Timer extends AppCompatActivity {
 
                 tieneTareas(user);
 
-              WorkRequest workRequest = new OneTimeWorkRequest.Builder(TimerWorker.class).build();
-              WorkManager.getInstance(Timer.this).enqueue(workRequest);
+                WorkRequest workRequest = new OneTimeWorkRequest.Builder(TimerWorker.class).build();
+                WorkManager.getInstance(Timer.this).enqueue(workRequest);
 
-              WorkManager.getInstance(Timer.this).getWorkInfoByIdLiveData(workRequest.getId()).observe(Timer.this,workInfo -> {
-
-
-
+                WorkManager.getInstance(Timer.this).getWorkInfoByIdLiveData(workRequest.getId()).observe(Timer.this,workInfo -> {
 
                   if(workInfo!=null){
-
 
                       if (workInfo.getState()== WorkInfo.State.RUNNING){
                           Data progress = workInfo.getProgress();

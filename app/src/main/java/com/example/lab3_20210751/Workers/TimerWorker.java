@@ -33,6 +33,8 @@ public class TimerWorker extends Worker {
                 return Result.failure();
             }
         }
+        data = new Data.Builder().putString("acabo","acabo").build();
+
 
         return Result.success(data);
     }
